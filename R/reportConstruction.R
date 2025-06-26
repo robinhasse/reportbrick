@@ -18,9 +18,7 @@ reportConstruction <- function(gdx, brickSets = NULL, silent = TRUE) {
   v_construction <- readGdxSymbol(gdx, "v_construction")
 
   # unit conversion: million m2 / yr-> billion m2 / yr
-  v_construction <- (v_construction / 1000) %>%
-    mselect(qty = "area") %>%
-    collapseDim(dim = "qty")
+  v_construction <- .prepVar(v_construction)
 
 
 
@@ -57,6 +55,14 @@ reportConstruction <- function(gdx, brickSets = NULL, silent = TRUE) {
               "Construction|Residential|{loc} (bn m2/yr)", brickSets,
               agg = c(bs = "all", hs = "all", typ = "res", inc = "all"),
               rprt = c(loc = "all"),
+              silent = silent),
+
+
+    ## by building shell ====
+    reportAgg(v_construction,
+              "Construction|Residential|{bs} (bn m2/yr)", brickSets,
+              agg = c(hs = "all", loc = "all", typ = "res", inc = "all"),
+              rprt = c(bs = "all"),
               silent = silent),
 
 

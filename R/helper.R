@@ -37,3 +37,36 @@
     unite("combinations", everything(), sep = ".") %>%
     getElement("combinations")
 }
+
+
+
+
+
+
+#' Prepare variable
+#'
+#' Convert values by multiplying with given factor (usually 1/1000 to get from
+#' million m2 to billion m2) and select the area quantity.
+#'
+#' @param x MAgPIE object of brick variable
+#' @param factor numeric, scalar factor that \code{x} is multiplied with
+#' @param onlyArea logical, if TRUE, select 'area' quantity and collapse
+#'   quantity dimension
+#' @returns scales and filtered MAgPIE object
+#'
+#' @author Robin Hasse
+#'
+#' @importFrom magclass getSets mselect collapseDim
+#' @importFrom dplyr %>%
+
+.prepVar <- function(x, factor = 1E-3, onlyArea = TRUE) {
+  stopifnot("factor needs to be a scalar" =
+              is.numeric(factor) && length(factor) == 1)
+  x <- x * factor
+  if (isTRUE(onlyArea) && "qty" %in% getSets(x)) {
+    x <- x %>%
+      mselect(qty = "area") %>%
+      collapseDim(dim = "qty")
+  }
+  return(x)
+}

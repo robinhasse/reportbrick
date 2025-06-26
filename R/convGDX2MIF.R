@@ -75,6 +75,11 @@ convGDX2MIF <- function(gdx,
   message("running reportEnergy ...")
   output <- mbind(output, extendPeriods(reportEnergy(gdx, brickSets, silent = silent), t))
 
+  ## Rates ====
+  message("running reportRates ...")
+  output <- mbind(output, extendPeriods(reportRates(gdx, brickSets, silent = silent), t))
+
+
 
   # FINISH ---------------------------------------------------------------------
 
