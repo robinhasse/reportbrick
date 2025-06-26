@@ -27,7 +27,7 @@ install.packages("reportbrick")
 Package updates can be installed using `update.packages` (make sure that the additional repository has been added before running that command):
 
 ```r 
-update.packages()
+supdate.packages()
 ```
 
 ## Questions / Problems

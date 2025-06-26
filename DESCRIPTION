@@ -18,6 +18,7 @@ Imports:
   dplyr,
   gamstransfer (>= 3.0.1),
   ggplot2,
+  ggpubr,
   kableExtra,
   knitr,
   madrat,
@@ -31,7 +32,8 @@ Imports:
   tidyr,
   yaml
 Suggests:
-    covr,
-    testthat
+  covr,
+  ggsankey,
+  testthat
 Encoding: UTF-8
 RoxygenNote: 7.3.2
