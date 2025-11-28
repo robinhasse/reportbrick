@@ -110,7 +110,7 @@ reportEnergy <- function(gdx, brickSets = NULL, silent = TRUE) {
 
 
 
-#' Add carrier dimesion based on heating system technology
+#' Add carrier dimension based on heating system technology
 #'
 #' @param v_stock MagPIE object, BRICK variable
 #' @param hsCarrier data.frame, mapping between heating technology and energy
