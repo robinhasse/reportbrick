@@ -4,7 +4,7 @@
 \alias{showMatchingStandingStock}
 \title{Plot share of initial heating systems removed}
 \usage{
-showMatchingStandingStock(path)
+showMatchingStandingStock(path, aggToGlobal = FALSE)
 }
 \arguments{
 \item{path}{character, path to the run}

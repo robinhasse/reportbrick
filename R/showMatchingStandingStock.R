@@ -25,7 +25,7 @@
 #'   scale_linewidth_manual scale_linetype_manual as_labeller
 #' @export
 
-showMatchingStandingStock <- function(path) {
+showMatchingStandingStock <- function(path, aggToGlobal = FALSE) {
 
   # FUNCTIONS ------------------------------------------------------------------
 
@@ -42,7 +42,8 @@ showMatchingStandingStock <- function(path) {
       mutate(across(all_of(c("hs", "region", "typ", "vin")),
                     ~ factor(.x, levels = levels(p_shareRenHSinit[[cur_column()]])))) %>%
       mutate(level = factor(.data$level,
-                            c("lower", "upper", "matched", "extrapolated", "central")))
+                            c("lower", "upper", "matched", "extrapolated", "central"))) %>%
+      filter(.data$ttotOut%%5 == 0 | !.data$level %in% c("matched", "extrapolated"))
   }
 
 
@@ -59,6 +60,22 @@ showMatchingStandingStock <- function(path) {
       group_by(.data$ttotOut) %>%
       filter(min(.data$value) < 0.95 | .data$ttotOut <= max(stock$ttot)) %>%
       ungroup()
+  }
+
+
+  .aggregate <- function(data, v_stock, tinit) {
+    dims <- c("hs", "vin", "region", "typ")
+    v_stock %>%
+      filter(.data$ttot == tinit) %>%
+      group_by(across(all_of(dims))) %>%
+      summarise(stock = sum(.data$value), .groups = "drop") %>%
+      right_join(data, by = dims) %>%
+      group_by(across(-all_of(c("region", "value", "stock")))) %>%
+      summarise(value = sum(proportions(.data$stock) * .data$value),
+                region = "all",
+                .groups = "drop") %>%
+      rbind(data) %>%
+      mutate(region = factor(.data$region, c(levels(data$region), "all")))
   }
 
 
@@ -104,12 +121,16 @@ showMatchingStandingStock <- function(path) {
     tunnel <- .getTunnelData(pData, tinit)
     line <- .getLineData(pData)
 
-    ggplot(mapping = aes(x = .data$ttotOut)) +
-      geom_ribbon(aes(ymin = .data$lower,
-                      ymax = .data$upper,
-                      fill = .data$hs),
-                  data = tunnel,
-                  alpha = 0.3) +
+    p <- ggplot(mapping = aes(x = .data$ttotOut))
+    if (nrow(tunnel) > 0) {
+      p <- p +
+        geom_ribbon(aes(ymin = .data$lower,
+                        ymax = .data$upper,
+                        fill = .data$hs),
+                    data = tunnel,
+                    alpha = 0.3)
+    }
+    p <- p +
       geom_line(aes(y = .data$value,
                     colour = .data$hs,
                     linetype = .data$level,
@@ -137,6 +158,7 @@ showMatchingStandingStock <- function(path) {
             panel.grid.minor.y = element_line(color = "lightgrey"),
             panel.spacing.y = unit(1, "lines"),
             legend.title = element_blank())
+    p
   }
 
 
@@ -151,12 +173,26 @@ showMatchingStandingStock <- function(path) {
     return(NULL)
   }
 
-  v_stock <- readGdxSymbol(gdx, "v_stock", asMagpie = FALSE)
-  p_shareRenHSinit <- readGdxSymbol(gdx, "p_shareRenHSinit", asMagpie = FALSE)
-  v_shareRenHSinit <- readGdxSymbol(gdx, "v_shareRenHSinit", asMagpie = FALSE)
-  f_shareRenHSinit <- read.csv(file.path(path, "f_shareRenHSinit.csv"))
+  cfg <- yaml::read_yaml(file.path(path, "config", "config_COMPILED.yaml"))
 
+  v_stock <- readGdxSymbol(gdx, "v_stock", asMagpie = FALSE)
   tinit <- readGdxSymbol(gdx, "tinit")[[1]]
+  p_shareRenHSinit <- readGdxSymbol(gdx, "p_shareRenHSinit", asMagpie = FALSE)
+
+  if (cfg$switches$RUNTYPE == "matching") {
+    v_shareRenHSinit <- readGdxSymbol(gdx, "v_shareRenHSinit", asMagpie = FALSE)
+    f_shareRenHSinit <- read.csv(file.path(path, "f_shareRenHSinit.csv"))
+  } else {
+    v_shareRenHSinit <- p_shareRenHSinit %>% mutate(value = NA)
+    f_shareRenHSinit <- p_shareRenHSinit %>% mutate(value = NA)
+  }
+
+
+  if ("ttot" %in% names(p_shareRenHSinit)) {
+    p_shareRenHSinit <- rename(p_shareRenHSinit, ttotOut = "ttot")
+    v_shareRenHSinit <- rename(v_shareRenHSinit, ttotOut = "ttot")
+    f_shareRenHSinit <- rename(f_shareRenHSinit, ttotOut = "ttot")
+  }
 
 
 
@@ -164,6 +200,10 @@ showMatchingStandingStock <- function(path) {
 
   data <- .combineData(p_shareRenHSinit, v_shareRenHSinit, f_shareRenHSinit) %>%
     .removeIrrelevantData(v_stock, tinit)
+
+  if (aggToGlobal) {
+    data <- .aggregate(data, v_stock, tinit)
+  }
 
   regions <- levels(data$region)
   typs <- levels(data$typ)
