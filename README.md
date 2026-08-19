@@ -1,6 +1,6 @@
 # Reporting package for BRICK
 
-R package **reportbrick**, version **0.17.0**
+R package **reportbrick**, version **0.17.1**
 
    [![R build status](https://github.com/pik-piam/reportbrick/workflows/check/badge.svg)](https://github.com/pik-piam/reportbrick/actions) [![codecov](https://codecov.io/gh/pik-piam/reportbrick/branch/master/graph/badge.svg)](https://app.codecov.io/gh/pik-piam/reportbrick) [![r-universe](https://pik-piam.r-universe.dev/badges/reportbrick)](https://pik-piam.r-universe.dev/builds)
 
@@ -38,15 +38,17 @@ In case of questions / problems please contact Robin Hasse <robin.hasse@pik-pots
 
 To cite package **reportbrick** in publications use:
 
-Hasse R, Rosemann R (2026). "reportbrick: Reporting package for BRICK - Version 0.17.0."
+Hasse R, Rosemann R (2026). "reportbrick: Reporting package for BRICK." Version: 0.17.1, <https://github.com/pik-piam/reportbrick>.
 
 A BibTeX entry for LaTeX users is
 
  ```latex
 @Misc{,
-  title = {reportbrick: Reporting package for BRICK - Version 0.17.0},
+  title = {reportbrick: Reporting package for BRICK},
   author = {Robin Hasse and Ricarda Rosemann},
-  date = {2026-06-03},
+  date = {2026-08-19},
   year = {2026},
+  url = {https://github.com/pik-piam/reportbrick},
+  note = {Version: 0.17.1},
 }
 ```
