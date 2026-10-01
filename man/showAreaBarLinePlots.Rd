@@ -27,7 +27,9 @@ the variables to plot.}
 
 \item{nHeading}{numeric, level of heading}
 
-\item{showLines}{logical, should total line be plotted on are and bar plots?}
+\item{showLines}{logical, should line plots be shown?}
+
+\item{showTot}{logical, should total line be plotted on are and bar plots?}
 }
 \description{
 Show Area and bar plots followed by multiple line plots

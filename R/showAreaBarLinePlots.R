@@ -8,7 +8,7 @@
 #' @param heading character, header text
 #' @param nHeading numeric, level of heading
 #' @param showLines logical, should line plots be shown?
-#' @param showLines logical, should total line be plotted on are and bar plots?
+#' @param showTot logical, should total line be plotted on are and bar plots?
 #'
 #' @author Robin Hasse
 #'

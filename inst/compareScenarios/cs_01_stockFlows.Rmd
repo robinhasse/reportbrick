@@ -17,6 +17,8 @@ if (all(total %in% data$variable)) {
   showAreaAndBarPlots(data, vars = total[c("res", "com")], tot = total[["all"]],
                       orderVars = "user", scales = "fixed")
 }
+
+purrr::walk(intersect(total, data$variable), mip::showLinePlots, data = data)
 ```
 
 ```{r stock loop, results='asis'}
@@ -39,6 +41,9 @@ for (sec in names(total)) {
   
   showAreaBarLinePlots(data = data, tot = tot, items = heating,
                        heading = "by Space heating", nHeading = 4)
+  
+  showAreaBarLinePlots(data = data, tot = tot, items = carrierHeating,
+                       heading = "by Carrier", nHeading = 4)
 }
 ```
 

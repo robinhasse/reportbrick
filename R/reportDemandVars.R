@@ -90,9 +90,7 @@ reportDemandVars <- function(x, var, unit, brickSets, silent) {
     )
   }
 
-
-  s
-  getItems(out) <- paste0(getItems(out), " (", unit, ")")
+  getNames(out) <- paste0(getNames(out), " (", unit, ")")
 
   return(out)
 }

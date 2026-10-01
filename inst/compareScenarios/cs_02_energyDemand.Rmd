@@ -3,27 +3,29 @@ for (en in names(enDemand)) {
   
   heading(enDemand[[en]], 1)
   
-  heading("Space heating", 2)
-  
-  # demand vars
-  total <- c(all = paste0(en, "|Buildings|Space heating"),
-             res = paste0(en, "|Residential|Space heating"),
-             com = paste0(en, "|Commercial|Space heating"))
-  
-  for (sec in names(total)) {
-      tot <- total[[sec]]
-      
-      if (!tot %in% data$variable) next
-      
-      heading(sec, 3)
-      
-      showAreaBarLinePlots(data = data, tot = tot, items = carrierHeating)
-      
-      showAreaBarLinePlots(data = data, tot = paste(tot, type, sep = "|"), items = carrierHeating,
-                           heading = "by Building type", nHeading = 4)
-      
-      showAreaBarLinePlots(data = data, tot = paste(tot, location, sep = "|"), items = carrierHeating,
-                           heading = "by Location", nHeading = 4)
+  for (eu in enduse) {
+    heading(eu, 2)
+    
+    # demand vars
+    total <- c(all = paste0(en, "|Buildings|", eu),
+               res = paste0(en, "|Residential|", eu),
+               com = paste0(en, "|Commercial|", eu))
+    
+    for (sec in names(total)) {
+        tot <- total[[sec]]
+        
+        if (!tot %in% data$variable) next
+        
+        heading(sec, 3)
+        
+        showAreaBarLinePlots(data = data, tot = tot, items = carrierHeating)
+        
+        showAreaBarLinePlots(data = data, tot = paste(tot, type, sep = "|"), items = carrierHeating,
+                             heading = "by Building type", nHeading = 4)
+        
+        showAreaBarLinePlots(data = data, tot = paste(tot, location, sep = "|"), items = carrierHeating,
+                             heading = "by Location", nHeading = 4)
+    }
   }
 }
 ```
